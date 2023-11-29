@@ -70,3 +70,7 @@ function playNoise(time) {
         env.play(noise);
     }
 }
+
+function touchStarted() {
+    getAudioContext().resume();
+  }
