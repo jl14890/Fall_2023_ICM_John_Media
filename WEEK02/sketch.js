@@ -93,6 +93,10 @@ function drawSquares() {
 }
 
 function mousePressed() {
+  // Define displacement as a percentage of the smaller dimension of the window
+  let displacementFactor = 0.02; // 2% of window dimension
+  let maxDisplacement = min(windowWidth, windowHeight) * displacementFactor;
+
   // Iterate over squares on the left side
   squaresG1.forEach(square => {
     if (mouseX > square.positionX && mouseX < square.positionX + squareSize &&
@@ -106,8 +110,8 @@ function mousePressed() {
 
         // Now displace a random black square
         randomChosenSquareBlack = random(squaresG2);
-        randomChosenSquareBlack.positionX += random(-20, 20);
-        randomChosenSquareBlack.positionY += random(-20, 20);
+        randomChosenSquareBlack.positionX += random(-maxDisplacement, maxDisplacement);
+        randomChosenSquareBlack.positionY += random(-maxDisplacement, maxDisplacement);
       }
     }
   });
@@ -125,10 +129,11 @@ function mousePressed() {
 
         // Now displace a random white square
         randomChosenSquareWhite = random(squaresG1);
-        randomChosenSquareWhite.positionX += random(-20, 20);
-        randomChosenSquareWhite.positionY += random(-20, 20);
+        randomChosenSquareWhite.positionX += random(-maxDisplacement, maxDisplacement);
+        randomChosenSquareWhite.positionY += random(-maxDisplacement, maxDisplacement);
       }
     }
   });
 }
+
 
