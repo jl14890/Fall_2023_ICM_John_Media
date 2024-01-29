@@ -1,7 +1,7 @@
 let colorValue = 0;
 
 function setup() {
-  createCanvas(400, 400);
+  createCanvas(windowWidth, windowHeight);
 }
 
 function draw() {
@@ -9,13 +9,13 @@ function draw() {
   stroke(colorValue);
   fill(colorValue);
 
-  if (mouseY > 200) {
+  if (mouseY > windowHeight / 2) {
     //lower part of the canvas
     print("caught");
     //Lower part background
     push();
     fill("black");
-    rect(0, 200, 400, 200);
+    rect(0, windowHeight/2, windowWidth, windowHeight/2);
     pop();
 
     // Circle and lines follow the mouse
@@ -44,7 +44,7 @@ function draw() {
     //upper part of the canvas
     push();
     fill("black");
-    rect(0, 0, 400, 200);
+    rect(0, 0, windowWidth, windowHeight / 2);
     pop();
     
     //my approach to make the circle flipped and symmetrical to the mouse without using the translate fucntion to center the origin for I think this might seriosly affect my other values
