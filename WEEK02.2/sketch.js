@@ -11,7 +11,7 @@ function draw() {
 
   if (mouseY > windowHeight / 2) {
     //lower part of the canvas
-    print("caught");
+    // print("caught");
     //Lower part background
     push();
     fill("black");
@@ -39,7 +39,7 @@ function draw() {
       mouseY + random(-10, 10)
     );
   } else {
-    print("released");
+    // print("released");
     
     //upper part of the canvas
     push();
