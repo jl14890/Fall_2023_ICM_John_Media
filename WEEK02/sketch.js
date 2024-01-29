@@ -1,127 +1,90 @@
-/* Plain Language & starting idea
-The canvas is divided into two sections;
-each section has a grid of squares of 2x4
-the left side has squares filled in black with white strokes
-the right side has squares filled in white with black strokes
-
-the left side squares have a random square that has a x+=random(0,5) and y+=random(0,5) position change, making this one squaring not aligned.
-while the right side squares are perfectly algined.
-
-
--------------------NOTES AFTER FINISHED------------------
-
-the description is merely a reflection of my thinking process, it's not the decription of the finished work
-
----------------------------------------------------------
-
------------------------INSTRUCTION-----------------------
-
-the user will need to click on either side of the screen to "move back" the mispositioned square. 
-
----------------------------------------------------------
-
-*/
-
-//ARRAY & FOR LOOP PRACTICE
-
-// let squares = [];
-// let squareSize = 400/4;
-
-// function setup() {
-//   createCanvas(400, 400);
-
-//   for (let i = 0; i < 4; i++) {
-//     for (let j = 0; j < 4; j++) {
-//       let intX = j * squareSize;
-//       let intY = i * squareSize;
-//       squares.push({ positionX: intX, positionY: intY});
-//     }
-//   }
-// }
-
-// function draw() {
-//   background(220);
-//   for (let i = 0; i < squares.length; i++) {
-//     rect(squares[i].positionX, squares[i].positionY, squareSize, squareSize);
-//   }
-// }
-
-//GETTING SERIOUS
-
-let squaresG1 = []; //left group of squares
-let squaresG2 = []; //right group of squares
-
-let squareSize = 400 / 8;
-
+let squaresG1 = []; // Left group of squares
+let squaresG2 = []; // Right group of squares
 let randomChosenSquareWhite = null;
 let randomChosenSquareBlack;
+let squareSize; // Global variable for square size
 
 function setup() {
-  createCanvas(400, 400);
+  createCanvas(windowWidth, windowHeight);
   strokeWeight(0.5);
-
-  //left group
-  for (let i = 0; i < 8; i++) {
-    //row number
-    for (let j = 0; j < 4; j++) {
-      //column number
-
-      squaresG1.push({
-        positionX1: j * squareSize,
-        positionY1: i * squareSize,
-        originalX1: j * squareSize,
-        originalY1: i * squareSize,
-      });
-    }
-  }
-
-  //right group
-  for (let k = 0; k < 8; k++) {
-    //row number
-    for (let l = 4; l < 8; l++) {
-      //column number
-
-      squaresG2.push({
-        positionX2: l * squareSize,
-        positionY2: k * squareSize,
-        originalX2: l * squareSize,
-        originalY2: k * squareSize,
-      });
-    }
-  }
-
-  randomChosenSquareBlack = random(squaresG2);
-  randomChosenSquareBlack.positionX2 += random(-10, 10);
-  randomChosenSquareBlack.positionY2 += random(-10, 10);
+  calculateSquareSize(); // Initialize square size
+  initializeSquares(); // Initialize squares' positions
 }
 
 function draw() {
   background("white");
+  drawSquares(); // Draw squares with current positions and sizes
+}
 
-  //black background for white squares
-  push();
-  fill("black");
-  rect(0, 0, width / 2, height);
-  pop();
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
+  calculateSquareSize(); // Recalculate square size on window resize
+  initializeSquares(); // Reinitialize squares' positions on window resize
+}
 
+function calculateSquareSize() {
+  squareSize = windowHeight / 8; // Calculate square size based on window height
+}
+
+function initializeSquares() {
+  squaresG1 = [];
+  squaresG2 = [];
+
+  // Left group initialization
+  for (let i = 0; i < 8; i++) {
+    // Row number
+    for (let j = 0; j < 4; j++) {
+      // Column number
+      squaresG1.push({
+        positionX: j * squareSize,
+        positionY: i * squareSize,
+        originalX: j * squareSize,
+        originalY: i * squareSize,
+      });
+    }
+  }
+
+  // Right group initialization
+  for (let k = 0; k < 8; k++) {
+    // Row number
+    for (let l = 4; l < 8; l++) {
+      // Column number
+      squaresG2.push({
+        positionX: l * squareSize,
+        positionY: k * squareSize,
+        originalX: l * squareSize,
+        originalY: k * squareSize,
+      });
+    }
+  }
+
+  // Choose a random square to displace
+  randomChosenSquareBlack = random(squaresG2);
+  randomChosenSquareBlack.positionX += random(-10, 10);
+  randomChosenSquareBlack.positionY += random(-10, 10);
+}
+
+function drawSquares() {
+  // Draw white squares on the left
   for (let i = 0; i < squaresG1.length; i++) {
     fill("white");
     stroke("black");
     rect(
-      squaresG1[i].positionX1,
-      squaresG1[i].positionY1,
+      squaresG1[i].positionX,
+      squaresG1[i].positionY,
       squareSize,
       squareSize,
       5
     );
   }
 
+  // Draw black squares on the right
   for (let i = 0; i < squaresG2.length; i++) {
     fill("black");
     stroke("white");
     rect(
-      squaresG2[i].positionX2,
-      squaresG2[i].positionY2,
+      squaresG2[i].positionX,
+      squaresG2[i].positionY,
       squareSize,
       squareSize,
       5
@@ -130,59 +93,42 @@ function draw() {
 }
 
 function mousePressed() {
-  //move back the black squares and mess up the white ones
-  if (
-    randomChosenSquareBlack &&
-    mouseX > randomChosenSquareBlack.positionX2 &&
-    mouseX < randomChosenSquareBlack.positionX2 + squareSize &&
-    mouseY > randomChosenSquareBlack.positionY2 &&
-    mouseY < randomChosenSquareBlack.positionY2 + squareSize &&
-    !randomChosenSquareWhite
-  ) {
-    randomChosenSquareWhite = random(squaresG1);
-    //call out a random object of the array.
-    randomChosenSquareWhite.positionX1 += random(-20, 20);
-    randomChosenSquareWhite.positionY1 += random(-20, 20);
-    //randomly move it.
+  // Iterate over squares on the left side
+  squaresG1.forEach(square => {
+    if (mouseX > square.positionX && mouseX < square.positionX + squareSize &&
+        mouseY > square.positionY && mouseY < square.positionY + squareSize) {
+      // Click is within a square on the left side
+      if (randomChosenSquareWhite === square) {
+        // Move the displaced white square back
+        square.positionX = square.originalX;
+        square.positionY = square.originalY;
+        randomChosenSquareWhite = null;
 
-    randomChosenSquareBlack.positionX2 = randomChosenSquareBlack.originalX2;
-    randomChosenSquareBlack.positionY2 = randomChosenSquareBlack.originalY2;
-    randomChosenSquareBlack = null;
-    print(
-      "Black:" + randomChosenSquareBlack + " White: " + randomChosenSquareWhite
-    ); //put back the square that is moved on the side by using the stored orignal position.
-  }
+        // Now displace a random black square
+        randomChosenSquareBlack = random(squaresG2);
+        randomChosenSquareBlack.positionX += random(-20, 20);
+        randomChosenSquareBlack.positionY += random(-20, 20);
+      }
+    }
+  });
 
-  //move back the white squares and mess up the black ones
-  if (
-    randomChosenSquareWhite &&
-    mouseX > randomChosenSquareWhite.originalX1 &&
-    mouseX < randomChosenSquareWhite.originalX1 + squareSize &&
-    mouseY > randomChosenSquareWhite.originalY1 &&
-    mouseY < randomChosenSquareWhite.originalY1 + squareSize &&
-    !randomChosenSquareBlack
-  ) {
-    randomChosenSquareBlack = random(squaresG2);
-    randomChosenSquareBlack.positionX2 += random(-20, 20);
-    randomChosenSquareBlack.positionY2 += random(-20, 20);
+  // Iterate over squares on the right side
+  squaresG2.forEach(square => {
+    if (mouseX > square.positionX && mouseX < square.positionX + squareSize &&
+        mouseY > square.positionY && mouseY < square.positionY + squareSize) {
+      // Click is within a square on the right side
+      if (randomChosenSquareBlack === square) {
+        // Move the displaced black square back
+        square.positionX = square.originalX;
+        square.positionY = square.originalY;
+        randomChosenSquareBlack = null;
 
-    randomChosenSquareWhite.positionX1 = randomChosenSquareWhite.originalX1;
-    randomChosenSquareWhite.positionY1 = randomChosenSquareWhite.originalY1;
-
-    randomChosenSquareWhite = null;
-    print(
-      "Black:" + randomChosenSquareBlack + " White: " + randomChosenSquareWhite
-    );
-  }
+        // Now displace a random white square
+        randomChosenSquareWhite = random(squaresG1);
+        randomChosenSquareWhite.positionX += random(-20, 20);
+        randomChosenSquareWhite.positionY += random(-20, 20);
+      }
+    }
+  });
 }
 
-////testing with the released function
-
-// function mouseReleased() {
-//   if (mouseX < width / 2) {
-//     if (randomChosenSquareWhite) {
-//       randomChosenSquareWhite.positionX1 = randomChosenSquareWhite.originalX1;
-//       randomChosenSquareWhite = null;
-//     }
-//   }
-// }
